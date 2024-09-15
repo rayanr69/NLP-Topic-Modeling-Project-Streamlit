@@ -16,4 +16,4 @@ RUN python3 -m pip install -r requirements.txt
 # Expose the port for the Streamlit app
 EXPOSE 8501
 
-ENTRYPOINT ["streamlit", "run", "home.py", "--server.port=8501", "--server.address=0.0.0.0 "]
+ENTRYPOINT ["streamlit", "run", "home.py", "--server.port=8501", "--server.address=0.0.0.0"]
