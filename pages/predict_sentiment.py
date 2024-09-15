@@ -1,5 +1,4 @@
 import streamlit as st
-import joblib
 import requests  # Import manquant
 
 # Titre de l'application
@@ -24,8 +23,6 @@ if st.button("Tester la connexion API"):
         st.error(f"Erreur lors de la tentative de connexion: {e}")
 
 # Fonction de prédiction du sentiment
-def predict_sentiment(text):
-    return pipeline.predict([text])[0]
 
 # Interface Streamlit
 st.header("Analyse de Sentiment")
