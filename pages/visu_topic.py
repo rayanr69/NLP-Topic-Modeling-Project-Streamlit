@@ -3,6 +3,7 @@ import streamlit as st
 import requests
 from io import StringIO
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Récupération des données via l'API pour les topics
 def get_topic_data():
@@ -29,15 +30,17 @@ def plot_daily_success_rate(df):
     # Calcul du % de prédictions correctes par jour
     daily_success_rate = df.groupby('date').agg({'success': 'mean'}) * 100
 
-    # Création du graphique
-    fig, ax = plt.subplots()
-    daily_success_rate.plot(kind='line', ax=ax, color='blue', legend=False, marker='o')
-    ax.set_xlabel('Date')
-    ax.set_ylabel('% de prédictions correctes')
-    ax.set_title('Pourcentage de réussite des prédictions par jour')
+    # Utilisation du style Seaborn pour améliorer l'esthétique
+    sns.set(style="whitegrid")
 
-    for i in ax.containers:
-        ax.bar_label(i, fmt='%.2f%%', label_type='edge')
+    # Création du graphique
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.lineplot(x=daily_success_rate.index, y=daily_success_rate['success'], ax=ax, color='royalblue', marker='o', linewidth=2.5)
+    ax.set_xlabel('Date', fontsize=12)
+    ax.set_ylabel('% de Prédictions Correctes', fontsize=12)
+    ax.set_title('Pourcentage de Réussite des Prédictions par Jour', fontsize=14, fontweight='bold')
+    ax.grid(True, linestyle='--', alpha=0.6)
+    ax.tick_params(axis='x', rotation=45)
 
     st.pyplot(fig)
 
@@ -49,20 +52,24 @@ def plot_topic_success_rate(df):
     # Calcul du % de prédictions correctes par topic
     success_by_topic = df.groupby('real_topic').agg({'success': 'mean'}) * 100
 
-    # Création du graphique
-    fig, ax = plt.subplots()
-    success_by_topic.plot(kind='bar', ax=ax, color='green', legend=False)
-    ax.set_xlabel('Topic')
-    ax.set_ylabel('% de prédictions correctes')
-    ax.set_title('Pourcentage de réussite des prédictions par topic')
+    # Création du graphique avec Seaborn pour l'esthétique
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.barplot(x=success_by_topic.index, y=success_by_topic['success'], ax=ax, palette='Set2')
 
-    for i in ax.containers:
-        ax.bar_label(i, fmt='%.2f%%', label_type='edge')
+    ax.set_xlabel('Topic', fontsize=12)
+    ax.set_ylabel('% de Prédictions Correctes', fontsize=12)
+    ax.set_title('Pourcentage de Réussite des Prédictions par Topic', fontsize=14, fontweight='bold')
+    ax.grid(True, linestyle='--', alpha=0.6)
+    ax.tick_params(axis='x', rotation=45)
+
+    # Ajouter les labels pour chaque barre
+    for container in ax.containers:
+        ax.bar_label(container, fmt='%.2f%%', label_type='edge')
 
     st.pyplot(fig)
 
 # Streamlit app
-st.title("Suivi des Prédictions des Topics")
+st.title("📈 Suivi des Prédictions des Topics")
 
 # Charger les données des topics
 df_topics = get_topic_data()
